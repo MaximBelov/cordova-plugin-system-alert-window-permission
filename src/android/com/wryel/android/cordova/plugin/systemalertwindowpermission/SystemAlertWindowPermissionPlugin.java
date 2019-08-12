@@ -19,6 +19,8 @@ public class SystemAlertWindowPermissionPlugin extends CordovaPlugin {
 
     public static final String ACTION_HAS_PERMISSION = "hasPermission";
 
+    public static final String ACTION_OPEN_NOTIFICATION_SETTINGS = "openNotificationSettings";
+
     public static final String ACTION_REQUEST_PERMISSION = "requestPermission";
 
     /* return values */
@@ -48,7 +50,18 @@ public class SystemAlertWindowPermissionPlugin extends CordovaPlugin {
                 }
             });
 
-        } else if (ACTION_REQUEST_PERMISSION.equals(action)) {
+        }
+        else if (ACTION_OPEN_NOTIFICATION_SETTINGS.equals(action)) {
+
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    SystemAlertWindowPermissionPlugin.this.callbackContext = callbackContext;
+                    requestPermission();
+                }
+            });
+
+        }
+        else if (ACTION_REQUEST_PERMISSION.equals(action)) {
 
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
@@ -78,6 +91,48 @@ public class SystemAlertWindowPermissionPlugin extends CordovaPlugin {
             return TRUE;
         } else {
             return Settings.canDrawOverlays(cordova.getActivity()) ? TRUE : FALSE;
+        }
+    }
+
+    protected void openNotificationSettings() {
+        if (Build.VERSION.SDK_INT >= ANDROID_VERSION_MARSHMALLOW) {
+            String packageName = cordova.getActivity().getPackageName();
+            try {
+                Intent intent = new Intent();
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+
+                    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+
+                    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                    intent.putExtra("android.provider.extra.APP_PACKAGE", packageName);
+
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                    intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                    intent.putExtra("app_package", packageName);
+                    intent.putExtra("app_uid", cordova.getActivity().getApplicationInfo().uid);
+
+                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setData(Uri.parse("package:" + packageName));
+
+                } else {
+                    return;
+                }
+
+                cordova.startActivityForResult((CordovaPlugin) this, intent, REQUEST_SYSTEM_ALERT_WINDOW);
+
+            } catch (Exception e) {
+                // log goes here
+
+            }
+
         }
     }
 

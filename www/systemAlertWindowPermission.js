@@ -9,5 +9,8 @@ module.exports = {
     },
     requestPermission: function(successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, systemAlertWindowPermissionName, "requestPermission", []);
+    },
+    openNotificationSettings: function(successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, systemAlertWindowPermissionName, "openNotificationSettings", []);
     }
 };
