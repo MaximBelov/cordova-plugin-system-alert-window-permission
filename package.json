@@ -1,0 +1,14 @@
+{
+  "name": "cordova-plugin-system-alert-window-permission",
+  "author": {
+    "name": "wryel"
+  },
+  "version": "0.0.1",
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-system-alert-window-permission",
+    "platforms": [
+      "android"
+    ]
+  }
+}
