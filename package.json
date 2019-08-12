@@ -3,7 +3,7 @@
   "author": {
     "name": "wryel"
   },
-  "version": "0.0.2",
+  "version": "0.0.3",
   "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-system-alert-window-permission",
