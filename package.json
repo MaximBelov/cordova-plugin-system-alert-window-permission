@@ -3,8 +3,12 @@
   "author": {
     "name": "wryel"
   },
-  "version": "0.0.5",
+  "version": "0.0.6",
   "bundleDependencies": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaximBelov/cordova-plugin-system-alert-window-permission.git"
+  },
   "cordova": {
     "id": "cordova-plugin-system-alert-window-permission",
     "platforms": [
